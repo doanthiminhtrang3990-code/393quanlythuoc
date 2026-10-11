@@ -1,0 +1,29 @@
+--- src/services/db.ts
++++ src/services/db.ts
+@@ -1172,12 +1172,25 @@
+         const medId = 'med-' + Date.now() + '-' + added;
+         this.medicines.push({
+           ...item,
+           id: medId,
+           supplierId: this.suppliers.length > 0 ? this.suppliers[0].id : '',
+           createdAt: new Date().toISOString(),
+           updatedAt: new Date().toISOString()
+         });
+         
++        const nextYear = new Date();
++        nextYear.setFullYear(nextYear.getFullYear() + 2);
++        this.batches.push({
++          id: 'batch-' + Date.now() + '-' + added,
++          medicineId: medId,
++          batchNumber: 'Lô ' + new Date().getFullYear() + '-' + (added + 1),
++          mfgDate: new Date().toISOString().split('T')[0],
++          expDate: nextYear.toISOString().split('T')[0],
++          quantity: item.minStock * 2, // Provide 2x minStock initially
++          initialQuantity: item.minStock * 2,
++          unitPrice: item.unitPrice,
++          storageLocation: item.storageLocation,
++        });
++
+         added++;
+       }
+     }

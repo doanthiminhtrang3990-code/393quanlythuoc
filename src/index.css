@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@theme {
+  --color-emerald-50: #fff7ed;
+  --color-emerald-100: #ffedd5;
+  --color-emerald-200: #fed7aa;
+  --color-emerald-300: #fdba74;
+  --color-emerald-400: #fb923c;
+  --color-emerald-500: #f97316;
+  --color-emerald-600: #ea580c;
+  --color-emerald-700: #c2410c;
+  --color-emerald-800: #9a3412;
+  --color-emerald-900: #7c2d12;
+  --color-emerald-950: #431407;
+
+  --color-teal-50: #fffbeb;
+  --color-teal-100: #fef3c7;
+  --color-teal-200: #fde68a;
+  --color-teal-300: #fcd34d;
+  --color-teal-400: #fbbf24;
+  --color-teal-500: #f59e0b;
+  --color-teal-600: #d97706;
+  --color-teal-700: #b45309;
+  --color-teal-800: #92400e;
+  --color-teal-900: #78350f;
+  --color-teal-950: #451a03;
+
+  --color-green-50: #fff7ed;
+  --color-green-100: #ffedd5;
+  --color-green-200: #fed7aa;
+  --color-green-300: #fdba74;
+  --color-green-400: #fb923c;
+  --color-green-500: #f97316;
+  --color-green-600: #ea580c;
+  --color-green-700: #c2410c;
+  --color-green-800: #9a3412;
+  --color-green-900: #7c2d12;
+  --color-green-950: #431407;
+
+  --color-cyan-50: #fffbeb;
+  --color-cyan-100: #fef3c7;
+  --color-cyan-200: #fde68a;
+  --color-cyan-300: #fcd34d;
+  --color-cyan-400: #fbbf24;
+  --color-cyan-500: #f59e0b;
+  --color-cyan-600: #d97706;
+  --color-cyan-700: #b45309;
+  --color-cyan-800: #92400e;
+  --color-cyan-900: #78350f;
+  --color-cyan-950: #451a03;
+
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #f97316;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  --color-primary-950: #431407;
+}
+
+@layer base {
+  :root {
+    --font-body: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-heading: 'Lexend', 'Be Vietnam Pro', sans-serif;
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    color: #1e293b;
+    background-color: #f8fafc;
+    text-rendering: optimizeLegibility;
+    height: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    line-height: 1.5;
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  #root {
+    height: 100%;
+    min-height: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.015em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  button, input, select, textarea {
+    font-family: inherit;
+  }
+
+  /* Custom scrollbar for clean dashboard view */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #93c5fd;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #f97316;
+  }
+}
+
+/* Accessible focus styling */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Print optimizations for A4 reports */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  header, aside, #btn-toggle-sidebar, .no-print {
+    display: none !important;
+  }
+}

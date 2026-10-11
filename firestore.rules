@@ -1,0 +1,78 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default Deny All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Primitive Helpers
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    function isSignedIn() { 
+      return request.auth != null; 
+    }
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'minhtrangdongthanh@gmail.com' ||
+        request.auth.token.email == 'doanthiminhtrang3990@gmail.com'
+      );
+    }
+    function isOwner(userId) { 
+      return isSignedIn() && request.auth.uid == userId; 
+    }
+    function incoming() { 
+      return request.resource.data; 
+    }
+    function isValidSyncChunkId(chunkId) {
+      return chunkId is string && chunkId.size() <= 64 && chunkId.matches('^thcs_dt_(classes|operational|students_meta|students_[0-9])$');
+    }
+    function isValidSchoolSyncChunk(data) {
+      return data.keys().hasAll(['syncToken', 'updatedAt', 'payloadJson']) &&
+        data.keys().hasOnly(['syncToken', 'updatedAt', 'payloadJson', 'revision', 'chunkCount']) &&
+        data.syncToken is string && data.syncToken.size() <= 64 && data.syncToken == 'THCS_DONG_THANH_2026_V1' &&
+        data.updatedAt is string && data.updatedAt.size() <= 64 &&
+        data.payloadJson is string && data.payloadJson.size() <= 900000 &&
+        (!('revision' in data) || data.revision is number) &&
+        (!('chunkCount' in data) || data.chunkCount is number);
+    }
+
+    // Connection Health Check
+    match /test/connection {
+      allow read: if isSignedIn();
+    }
+
+    // Shared School Synchronization Chunks (Bridges ais-dev, ais-pre, Home & School computers)
+    match /schoolSync/{chunkId} {
+      allow get: if isValidSyncChunkId(chunkId);
+      allow list: if false;
+      allow create: if isValidSyncChunkId(chunkId) && isValidSchoolSyncChunk(incoming());
+      allow update: if isValidSyncChunkId(chunkId) && isValidSchoolSyncChunk(incoming());
+      allow delete: if false;
+    }
+
+    // User Profile Document and Nested Isolated Subcollections
+    match /users/{userId} {
+      // User Profile
+      allow read: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow delete: if isAdmin();
+
+      // Subcollections: Medicines, Batches, Transactions, Students, Clinic Visits, Settings, etc.
+      match /{subcollection}/{docId} {
+        allow read: if isOwner(userId) || isAdmin();
+        allow create: if (isOwner(userId) || isAdmin()) && isValidId(docId) && (
+          !('userId' in incoming()) || incoming().userId == userId
+        );
+        allow update: if (isOwner(userId) || isAdmin()) && isValidId(docId) && (
+          !('userId' in incoming()) || incoming().userId == userId
+        );
+        allow delete: if (isOwner(userId) || isAdmin()) && isValidId(docId);
+      }
+    }
+  }
+}

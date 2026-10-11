@@ -1,0 +1,6 @@
+{
+  "name": "Quản Lý Thuốc - THCS Đông Thạnh",
+  "description": "Hệ thống quản lý thuốc và y tế trường học: Hồ sơ sức khỏe học sinh, tiếp nhận phòng y tế, quản lý kho thuốc theo lô FEFO và xuất báo cáo chuẩn A4 tại THCS Đông Thạnh",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

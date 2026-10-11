@@ -1,0 +1,316 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 200 },
+        "fullName": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 200 },
+        "role": { "type": "string", "enum": ["bgh", "admin", "medic"] }
+      },
+      "required": ["id", "username", "fullName", "email", "role"]
+    },
+    "Medicine": {
+      "title": "Medicine",
+      "description": "Catalog item for medicine with FEFO tracking info",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "maxLength": 255 },
+        "activeIngredient": { "type": "string", "maxLength": 255 },
+        "unit": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "code", "name", "unit"]
+    },
+    "MedicineBatch": {
+      "title": "MedicineBatch",
+      "description": "Specific manufactured lot of a medicine with expiry date for FEFO tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "medicineId": { "type": "string", "maxLength": 128 },
+        "batchNumber": { "type": "string", "maxLength": 100 },
+        "currentQuantity": { "type": "number" },
+        "expiryDate": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "medicineId", "batchNumber", "currentQuantity", "expiryDate"]
+    },
+    "InventoryTransaction": {
+      "title": "InventoryTransaction",
+      "description": "Inward receipt or outward dispensing record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 100 },
+        "type": { "type": "string", "enum": ["import", "export"] },
+        "quantity": { "type": "number" }
+      },
+      "required": ["id", "userId", "code", "type", "quantity"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Pharmaceutical distributor or medical center supplier",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 255 },
+        "code": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "userId", "name", "code"]
+    },
+    "MedicalSupply": {
+      "title": "MedicalSupply",
+      "description": "Medical consumables, bandage, cotton, thermometers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 255 },
+        "quantity": { "type": "number" }
+      },
+      "required": ["id", "userId", "name", "quantity"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student master profile in the school",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "studentCode": { "type": "string", "maxLength": 100 },
+        "fullName": { "type": "string", "maxLength": 255 },
+        "className": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "studentCode", "fullName", "className"]
+    },
+    "StudentHealthProfile": {
+      "title": "StudentHealthProfile",
+      "description": "Detailed health history and physical measurements of a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "userId", "studentId"]
+    },
+    "ClinicVisit": {
+      "title": "ClinicVisit",
+      "description": "School clinic reception log for first aid or medication dispensing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "visitCode": { "type": "string", "maxLength": 100 },
+        "studentName": { "type": "string", "maxLength": 255 },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "userId", "visitCode", "studentName"]
+    },
+    "HealthEvent": {
+      "title": "HealthEvent",
+      "description": "School health communication or campaign event",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 255 }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "HealthCheckup": {
+      "title": "HealthCheckup",
+      "description": "Periodic health examination campaign record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 255 }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "InventoryCheck": {
+      "title": "InventoryCheck",
+      "description": "Periodic stock audit and variance inspection record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "userId", "code"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Security and activity traceability entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 255 }
+      },
+      "required": ["id", "userId", "action"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Custom school configuration and expiry threshold days",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "schoolName": { "type": "string", "maxLength": 255 }
+      },
+      "required": ["id", "userId", "schoolName"]
+    },
+    "SchoolClass": {
+      "title": "SchoolClass",
+      "description": "Classroom grade and homeroom teacher definition",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "name"]
+    },
+    "UsageRecord": {
+      "title": "UsageRecord",
+      "description": "Historical medical usage log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "medicineName": { "type": "string", "maxLength": 255 }
+      },
+      "required": ["id", "userId", "medicineName"]
+    },
+    "MedicineDisposal": {
+      "title": "MedicineDisposal",
+      "description": "Protocol and execution record for disposal of expired or damaged pharmaceuticals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "maxLength": 128 },
+        "disposalCode": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string" },
+        "totalQuantity": { "type": "number" },
+        "disposalDate": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "userId", "disposalCode", "status"]
+    },
+    "SchoolSyncChunk": {
+      "title": "SchoolSyncChunk",
+      "description": "Synchronized school state chunk shared across home and school computers",
+      "type": "object",
+      "properties": {
+        "syncToken": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "payloadJson": { "type": "string", "maxLength": 900000 },
+        "revision": { "type": "number" },
+        "chunkCount": { "type": "number" }
+      },
+      "required": ["syncToken", "updatedAt", "payloadJson"]
+    },
+    "SchoolStaff": {
+      "title": "SchoolStaff",
+      "description": "Teacher and staff member profile and occupational health baseline",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "staffCode": { "type": "string", "maxLength": 100 },
+        "fullName": { "type": "string", "maxLength": 255 },
+        "department": { "type": "string", "maxLength": 150 },
+        "position": { "type": "string", "maxLength": 150 }
+      },
+      "required": ["id", "staffCode", "fullName", "department"]
+    }
+  },
+  "firestore": {
+    "schoolSync/{chunkId}": {
+      "schema": "SchoolSyncChunk",
+      "description": "Shared school synchronization chunks for classes, homeroom teachers, students, and clinic records"
+    },
+    "users/{userId}/staffMembers/{staffId}": {
+      "schema": "SchoolStaff",
+      "description": "User teacher and staff registry"
+    },
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profile document"
+    },
+    "users/{userId}/medicines/{medicineId}": {
+      "schema": "Medicine",
+      "description": "User medicines catalog"
+    },
+    "users/{userId}/batches/{batchId}": {
+      "schema": "MedicineBatch",
+      "description": "User medicine batches with expiry dates"
+    },
+    "users/{userId}/transactions/{transactionId}": {
+      "schema": "InventoryTransaction",
+      "description": "User inventory import/export receipts"
+    },
+    "users/{userId}/suppliers/{supplierId}": {
+      "schema": "Supplier",
+      "description": "User medical suppliers list"
+    },
+    "users/{userId}/supplies/{supplyId}": {
+      "schema": "MedicalSupply",
+      "description": "User medical supplies catalog"
+    },
+    "users/{userId}/students/{studentId}": {
+      "schema": "Student",
+      "description": "User student registry"
+    },
+    "users/{userId}/healthProfiles/{profileId}": {
+      "schema": "StudentHealthProfile",
+      "description": "User student health records"
+    },
+    "users/{userId}/clinicVisits/{visitId}": {
+      "schema": "ClinicVisit",
+      "description": "User infirmary visits and dispensing log"
+    },
+    "users/{userId}/healthEvents/{eventId}": {
+      "schema": "HealthEvent",
+      "description": "User health events and programs"
+    },
+    "users/{userId}/healthCheckups/{checkupId}": {
+      "schema": "HealthCheckup",
+      "description": "User periodic health checkup campaigns"
+    },
+    "users/{userId}/inventoryChecks/{checkId}": {
+      "schema": "InventoryCheck",
+      "description": "User warehouse inventory check records"
+    },
+    "users/{userId}/disposals/{disposalId}": {
+      "schema": "MedicineDisposal",
+      "description": "User expired medicine disposal records and protocols"
+    },
+    "users/{userId}/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "User system audit trails"
+    },
+    "users/{userId}/settings/{settingId}": {
+      "schema": "AppSettings",
+      "description": "User custom school settings"
+    },
+    "users/{userId}/schoolClasses/{classId}": {
+      "schema": "SchoolClass",
+      "description": "User school classes list"
+    },
+    "users/{userId}/usageRecords/{recordId}": {
+      "schema": "UsageRecord",
+      "description": "User medication usage entries"
+    }
+  }
+}

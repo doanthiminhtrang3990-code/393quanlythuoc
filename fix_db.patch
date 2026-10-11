@@ -1,0 +1,51 @@
+--- src/services/db.ts
++++ src/services/db.ts
+@@ -3131,6 +3131,10 @@
+   public getMonthlyClinicReport(monthStr: string): {
+     month: string;
+     totalVisits: number;
++    outcomes: Record<string, number>;
++    healthEventsCount: number;
++    byReason: Record<string, number>;
++    medicinesUsed: { medicineName: string; quantity: number; unit: string }[];
+     visitsByGrade: Record<number, number>;
+     visitsByClass: { className: string; count: number }[];
+     commonReasons: { reason: string; count: number; percentage: number }[];
+@@ -3148,15 +3152,19 @@
+   } {
+     const monthVisits = this.clinicVisits.filter((v) => v.visitDate.startsWith(monthStr));
+ 
+     const visitsByGrade: Record<number, number> = { 6: 0, 7: 0, 8: 0, 9: 0 };
+     const classMap: Record<string, number> = {};
+     const reasonMap: Record<string, number> = {};
+     const treatmentMap: Record<string, number> = {};
+     let emergencyTransfersCount = 0;
+     let parentContactedCount = 0;
++    const outcomes: Record<string, number> = {};
+ 
+     const medMap: Record<string, { medicineName: string; batchNumber: string; quantity: number; unit: string }> = {};
+     const supMap: Record<string, { supplyName: string; quantity: number; unit: string }> = {};
+ 
+     for (const v of monthVisits) {
+       const student = this.getStudentById(v.studentId);
+@@ -3165,6 +3173,10 @@
+       }
+ 
+       classMap[v.className] = (classMap[v.className] || 0) + 1;
++      if (v.outcome) {
++        outcomes[v.outcome] = (outcomes[v.outcome] || 0) + 1;
++      }
+ 
+       for (const r of v.reasons) {
+         reasonMap[r] = (reasonMap[r] || 0) + 1;
+@@ -3217,6 +3229,10 @@
+     return {
+       month: monthStr,
+       totalVisits: monthVisits.length,
++      outcomes,
++      healthEventsCount: monthEvents.length,
++      byReason: reasonMap,
++      medicinesUsed: Object.values(medMap).map(m => ({ medicineName: m.medicineName, quantity: m.quantity, unit: m.unit })),
+       visitsByGrade,
+       visitsByClass: Object.entries(classMap).map(([className, count]) => ({ className, count })),
+       commonReasons,
